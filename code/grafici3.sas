@@ -1,0 +1,6 @@
+ODS GRAPHICS ON;
+PROC CORR DATA=nascar PLOTS= SCATTER;
+    VAR girig;
+    WITH puntig posg;
+RUN;
+ODS GRAPHICS OFF;

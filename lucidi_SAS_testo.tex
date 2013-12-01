@@ -1,0 +1,1147 @@
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf}
+\usepackage{verbatim}
+
+% \usepackage{euler}
+\usepackage[T1]{fontenc}
+
+\immediate\write18{sh ./vc}
+\input{vc}
+
+\author{Gianluca Della Vedova}
+\title{Laboratorio Statistico-Informatico}
+\institute{Univ. Milano--Bicocca\\
+  \texttt{http://gianluca.dellavedova.org}}
+\date{\today, {\tiny revisione \VCRevision}}
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command:
+% \beamerdefaultoverlayspecification{<+->}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\begin{frame}\frametitle{Gianluca Della Vedova}
+  \begin{itemize}
+  \item
+    Lab. Statistico-Informatico
+  \item
+    Ufficio U14-2041
+  \item
+    \textsf{\small http://gianluca.dellavedova.org}
+  \item
+    \textsf{\small gianluca.dellavedova@unimib.it}
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Consensus Clustering}
+%   \begin{block}{Problem}
+%     \alert{Input}: set $\Pi$ of partitions of $U$\\
+%     \alert{Output}: a partition $P$ of $U$\\
+%     \alert{Goal}: $P$ the best possible representative of $\Pi$
+%   \end{block}
+
+%   \begin{block}{Objective Function}
+%     \begin{itemize}
+%     \item
+%       Symmetric difference between two partitions =
+%       Pairs of elements clustered differently
+%     \item
+%       $d(P,\Pi)=\sum_{\pi\in \Pi}d(\pi,P)$
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
+
+
+
+\begin{frame}\frametitle{Finestre}
+  \begin{itemize}
+  \item
+    Editor (F5)
+  \item
+    Log (F6)
+  \item
+    Output (F7)
+  \item
+    Icona Esegui (F8)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Altre finestre}
+  \begin{itemize}
+  \item
+    Explorer
+  \item
+    Viewtable
+  \item
+    Risultati
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Data set}
+  \begin{itemize}
+  \item
+    righe = osservazioni
+  \item
+    colonne = variabili
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Data Step}
+  \VerbatimInput{code/p1.sas}
+\end{frame}
+
+
+\begin{frame}\frametitle{Valori mancanti}
+  \begin{itemize}
+  \item
+    Rappresentati da un punto \texttt{.}
+  \item
+    Inseriti come spazi o punti
+  \end{itemize}\end{frame}
+
+
+\begin{frame}\frametitle{Data Step: Importazione}
+  \begin{itemize}
+  \item
+    Da file di dati grezzi (.txt .csv .dat)
+  \item
+    Da wizard di importazione
+  \item
+    Da viewtable
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Data set}
+  \begin{itemize}
+  \item
+    nome di data set $\le$ 32 caratteri
+  \item
+    lettere e cifre
+  \item
+    cifre in fondo
+  \item
+    nome di variabili $\le$ 32 caratteri
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}\frametitle{Filesystem}
+  \begin{itemize}
+  \item
+    Ogni data set corrisponde ad un file
+  \item
+    Una directory (cartella) contenente data set = \alert{libreria}
+  \item
+    \texttt{LIBNAME nomelibreria directory;}
+  \item
+    data set permamente = in una libreria
+  \item
+    data set temporaneo = libreria \texttt{WORK} = no libreria
+  \item
+    nome libreria $\le$ 8 caratteri
+  \end{itemize}\end{frame}
+
+\begin{frame}\frametitle{Filesystem}
+  \begin{itemize}
+  \item
+    Ogni data set corrisponde ad un file
+  \item
+    Dati: data set oppure file di dati grezzi
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Data Step: da dati grezzi}
+  \VerbatimInput{code/p2.sas}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Data Step: da dati grezzi 2}
+  \VerbatimInput{code/p3.sas}
+  Dati separati da spazi
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Data Step: da dati grezzi 2}
+  \VerbatimInput{code/p4.sas}
+  Se la riga contiene $>256$ caratteri.
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Data Step - lettura da file }
+  \VerbatimInput{code/p5.sas}
+  Dati separati da virgola
+
+  \texttt{DSD}: campi alfanumerici racchiusi da virgolette
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Data Step - lettura da file }
+  \VerbatimInput{code/p6.sas}
+  Dati separati da tabulazione
+\end{frame}
+
+\begin{frame}\frametitle{Data Step - lettura da file }
+  \begin{itemize}
+  \item
+    \texttt{FIRSTOBS}: da quale riga iniziare
+  \item
+    \texttt{OBS}: quante righe leggere
+  \item
+    \texttt{MISSOVER}: variabili non assegnate=MISSING
+  \item
+    \texttt{TRUNCOVER}: dati a fondo riga = scartati
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Formato a colonne}
+  \VerbatimInput{code/p7.sas}
+
+  \begin{itemize}
+  \item
+    Il cognome inizia alla colonna n. 11 e termina alla colonna n. 20.
+  \item
+    Righello nel log
+  \item
+    Gli spazi non separano.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Formati Alfanumerici}
+  \verb!: $20.!
+
+  Rappresenta il numero massimo di caratteri di un campo (in questo caso
+  20). Il dato termina con il primo spazio.
+
+  \verb!$20.!
+
+  Esattamente 20 caratteri.
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Formati Numerici}
+  \verb!10.3!
+
+  Numero totale di caratteri/cifre
+
+  .
+
+  Numero di cifre decimali
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Formati Date}
+  \begin{itemize}
+  \item
+    \verb!DDMMYY8.!
+  \item
+    \verb!DATE7.!
+  \item
+    Le date sono rappresentate in un formato interno, come numero di giorni dall'1/1/1960.
+  \item
+    Quindi una data {\`e} un numero
+  \item
+    Differenza fra date
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Date}
+  \begin{itemize}
+  \item
+    \verb!CAT(var1 var2)!
+  \item
+    concatena due stringhe
+  \item
+    \verb!SUM(var1 var2 var3)!,  \verb!MIN(var1 var2 var3)!,
+    \verb!MAX(var1 var2 var3)!,
+  \item
+    funzioni su variabili numeriche.
+  \item
+    Attenzione ai valori mancanti.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Altre funzioni}
+  \begin{itemize}
+  \item
+    \verb!MONTH(data)!
+  \item
+    \verb!YEAR(data)!,  \verb!DAY(data)!
+  \item
+    Sono funzioni che agiscono sulle date
+  \item
+    \verb!'01Mar2000'd!
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Formati}
+  \VerbatimInput{code/p8.sas}
+
+  \begin{itemize}
+  \item
+    \verb!+1! salta un carattere
+  \item
+    le parentesi raggruppano variabili
+  \item
+    \verb!COMMA7.! legge numeri con virgole come separatore migliaia
+  \item
+    \verb!DOLLAR7.2! come \verb!COMMA!, ma con un dollaro all'inizio
+  \item
+    \verb!@30! va a colonna 30
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Formati}
+  \begin{itemize}
+  \item
+    \verb!@'code:'! vai alla parte di dato grezzo che {\`e} uguale a \verb!code:!
+  \item
+    \verb!/! vai alla riga successiva dei dati
+  \item
+    \verb!@@! per avere pi{\`u} di una osservazione in una riga di dati
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Stampa}
+  \VerbatimInput{code/p15.sas}
+  \begin{itemize}
+  \item
+    Stampa il contenuto dell'ultimo data set creato.
+  \end{itemize}\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Stampa}
+  \VerbatimInput{code/p16.sas}
+  \begin{itemize}
+  \item
+    Stampa solo le variabili specificate
+  \end{itemize}\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Stampa}
+  \VerbatimInput{code/p17.sas}
+  \begin{itemize}
+  \item
+    Usa la variabile \texttt{cognome} al posto di \texttt{obs}.
+  \item
+    Definisce il titolo.
+  \end{itemize}\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Stampa}
+  \VerbatimInput{code/p17a.sas}
+  \begin{itemize}
+  \item
+    \verb+WHERE+ definisce su quali osservazioni agire
+  \end{itemize}\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Etichette di stampa}
+  \VerbatimInput{code/p34.sas}
+
+  \vspace{1em}
+  L'etichetta della variabile deve essere dentro il \verb!DATA! step
+\end{frame}
+
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Formati di stampa}
+  \begin{itemize}
+  \item
+    \verb!FORMAT variabile 16.;!
+  \item
+    \verb!FORMAT variabile DATE7.;!
+  \item
+    \verb!FORMAT variabile 8.2;!
+  \item
+    La \verb!FORMAT! deve essere dentro la \verb!PROC PRINT!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Formati di stampa}
+  \VerbatimInput{code/p17b.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Riepilogo data set}
+  \VerbatimInput{code/p19.sas}
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Data Step - copia }
+  \VerbatimInput{code/p9.sas}
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Data Step - copia }
+  \VerbatimInput{code/p10.sas}
+\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Creazione variabili}
+  \VerbatimInput{code/p11.sas}
+
+  \begin{itemize}
+  \item
+    Le operazioni fra variabili creano nuove variabili
+  \item
+    Operazioni usuali, \verb!+! \verb!-! \verb!/! \verb!*! \verb!**!
+  \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Selezione di osservazioni}
+  \begin{itemize}
+  \item
+    \verb!IF condizione;!
+  \item
+    \VerbatimInput{code/p12.sas}
+  \item
+    Operatori confronto, \texttt{EQ $=$, GT $>$, GE $\geq$, LT $<$, LE $\leq$, NE $\neq$}
+  \item
+    Valori non numerici devono essere racchiusi da apici
+  \end{itemize}\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Selezione di osservazioni 2}
+  \VerbatimInput{code/p12a.sas}
+  \begin{itemize}
+  \item
+    Rimozione di osservazione
+  \end{itemize}\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Istruzioni condizionali}
+  \VerbatimInput{code/p13.sas}
+  \begin{itemize}
+  \item
+    Pi{\`u} semplice se una sola istruzione
+  \item
+    \verb!IF condizione THEN istruzione;!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Condizioni complesse}
+  \VerbatimInput{code/p14.sas}
+  \begin{itemize}
+  \item
+    Operatori logici: AND, OR, NOT
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Condizioni complesse 2}
+  \VerbatimInput{code/p14a.sas}
+  \begin{itemize}
+  \item
+    Cosa succede se un'osservazione non soddisfa alcuna condizione?
+  \item
+    E se ne soddisfa pi{\`u} di una?
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Esercizio: BMI}
+  $$\text{BMI} = \frac{\text{peso}}{\text{altezza}^2}$$
+  \begin{itemize}
+  \item
+    $BMI < 18.5 \Rightarrow$ sottopeso
+  \item
+    $18.5 \le BMI < 25 \Rightarrow$ OK
+  \item
+    $25 \le BMI < 30 \Rightarrow$ sovrappeso
+  \item
+    $BMI \ge 30 \Rightarrow$ obesit{\`a}
+  \item
+    Modificare il data set attribuendo ad ogni persona la sua classificazione
+  \end{itemize}\end{frame}
+
+
+
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Lettura vs. Scrittura}
+  \begin{itemize}
+  \item
+    \verb+INPUT+ vs. \verb!PUT!
+  \item
+    \verb!INFILE! vs. \verb!FILE!
+  \end{itemize}\end{frame}
+
+
+
+\begin{frame}[fragile]\frametitle{Data Step - copia }
+  \VerbatimInput{code/p10a.sas}
+  \begin{itemize}
+  \item
+    Parte di data step eseguita per ogni osservazione del data set di origine
+  \item
+    Ciclo implicito
+  \item variabili inizialmente mancanti
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]\frametitle{Retain}
+  \begin{itemize}
+  \item
+    \verb+RETAIN+ mantiene il valore di una variabile per osservazioni diverse
+  \item
+    senza \verb+RETAIN+: variabile MISSING
+  \item
+    con \verb+RETAIN+: mantiene valore precedente
+  \item
+    Somma $\Rightarrow$ \verb+RETAIN+
+  \item
+    \verb!a + (5 * b)!
+  \item
+    \verb!a+1;!
+  \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Sequenza di variabili}
+  \begin{itemize}
+  \item
+    \verb!temp1 temp2 temp3 temp4 temp5!
+  \item
+    \verb!temp1-temp5!
+  \item
+    Sono variabili individuali
+  \end{itemize}\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Array}
+  \begin{itemize}
+  \item
+    Elemento array = nome alternativo variabile
+  \item
+    \verb!temp[1]!
+  \item
+    nome collettivo dell'array + indice
+  \item
+    \verb!array temp[5];!
+  \item
+    Gli array devono essere \alert{dichiarati} con il numero di elementi.
+  \end{itemize}\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Array}
+  \begin{itemize}
+  \item
+    \texttt{temp[1]} singolo elemento dell'array
+  \item
+    \texttt{temp} nome array
+  \item
+    \verb!array temp[5];!
+  \item
+    Associa le variabili \verb!temp1-temp5! agli elementi dell'array \verb!temp!.
+  \item
+    \verb!array temp[5] a b c d e;!
+  \item
+    Associa le variabili \verb!a b c d e! agli elementi dell'array \verb!temp!.
+  \end{itemize}\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Ciclo}
+  \begin{itemize}
+  \item
+    Ripetere pi{\`u} volte delle istruzioni.
+  \item
+    numero di volte = contatore = variabile dedicata
+  \item
+    Ciclo \verb+DO+
+  \end{itemize}
+  \VerbatimInput{code/p18.sas}
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Gestione variabili}
+  \begin{itemize}
+  \item
+    Il corpo di un data set viene ripetuto per ogni osservazione del data set originario.
+  \item
+    Il contenuto delle variabili vengono distrutte all'inizio dell'esecuzione di ogni osservazione.
+  \item
+    \verb!i+1;!
+  \item
+    \verb!RETAIN variabile;!
+  \end{itemize}\end{frame}
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Ordinare un data set}
+  \VerbatimInput{code/p20.sas}
+\end{frame}
+
+\begin{frame}\frametitle{Ordinare = Partizionare}
+  \begin{itemize}
+  \item
+    Stesso valore = osservazioni consecutive = insieme nella partizione
+  \item
+    \texttt{FIRST.variabile} =
+    prima osservazione dell'insieme
+  \item
+    \texttt{LAST.variabile} =
+    ultima osservazione dell'insieme
+  \end{itemize}\end{frame}
+
+\begin{frame}\frametitle{Uso di first  e last}
+  \begin{itemize}
+  \item
+    Sono predicati
+  \item
+    Vengono utilizzati in \texttt{IF}
+  \end{itemize}\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Esempio}
+  \VerbatimInput{code/p21.sas}
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Raggruppare osservazioni 1}
+  \begin{itemize}
+  \item
+    Una variabile \alert{chiave}
+  \item
+    Ordinare il data set con \texttt{BY chiave}
+  \item
+    Gestire un contatore \texttt{i} per contare la posizione dell'osservazione
+    corrente all'interno del gruppo.
+  \end{itemize}\end{frame}
+
+
+\begin{frame}\frametitle{Raggruppare osservazioni 2}
+  \begin{itemize}
+  \item
+    \texttt{FIRST.chiave}: azzerare  \texttt{i}
+  \item
+    Ogni osservazione: scrivere il dato letto nella i-esima posizione di un array,
+    incrementare  \texttt{i}
+  \item
+    \texttt{LAST.chiave}: \texttt{OUTPUT}
+  \end{itemize}\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Raggruppare osservazioni 3}
+  \small
+  Provincia\hspace{2ex}temp\hspace{1ex} i\hspace{1ex} FIRST.provincia\hspace{1ex} LAST.provincia
+\begin{verbatim}
+Milano    23
+Milano,   20
+Milano,   22
+Milano,   12
+Milano,   .
+Pavia,    24
+Pavia,    21
+Pavia,    19
+Pavia,    24
+Pavia,    21
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Raggruppare osservazioni 3}
+  \small
+  Provincia\hspace{2ex}temp\hspace{1ex} i\hspace{1ex} FIRST.provincia\hspace{1ex} LAST.provincia
+\begin{verbatim}
+Milano    23  1       V
+Milano    20  2
+Milano    22  3
+Milano    12  4
+Milano    .   5                   V
+Pavia     24  1       V
+Pavia     21  2
+Pavia     19  3
+Pavia     24  4
+Pavia     21  5                   V
+\end{verbatim}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Calcolare statistiche}
+  \VerbatimInput{code/p22.sas}
+  \begin{itemize}
+  \item
+    Seleziona variabili
+  \item
+    Altrimenti su tutte le variabili numeriche
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Calcolare statistiche}
+  \VerbatimInput{code/p23.sas}
+  \begin{itemize}
+  \item
+    Stratifica le statistiche
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Calcolare statistiche}
+  \VerbatimInput{code/p24.sas}
+  \begin{itemize}
+  \item
+    Risultati in un dataset
+  \item
+    \verb+_TYPE_+ e \verb+_FREQ_+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Calcolare statistiche}
+  \VerbatimInput{code/p24a.sas}
+  \begin{itemize}
+  \item
+    \verb+NWAY+: Stratificazione massima
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Statistiche}
+  \texttt{N}: numero osservazioni con valore non mancante\\
+  \texttt{NMISS}: numero osservazioni con valore mancanti\\
+  \texttt{NONOBS}: numero osservazioni\\
+  \texttt{MEAN}: media\\
+  \texttt{MEDIAN}: mediana\\
+  \texttt{STDDEV}: deviazione standard\\
+  \texttt{MAX}: massimo\\
+  \texttt{SUM}: somma\\
+  \texttt{ALPHA=.05 CLM}: intervallo di confidenza\\
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Fondere due data set}
+  \VerbatimInput{code/p28a.sas}
+  \begin{itemize}
+  \item
+    Le osservazioni vengono aggiunte sequenzialmente
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Fondere due data set}
+  \VerbatimInput{code/p28.sas}
+  \begin{itemize}
+  \item
+    Le osservazioni sono mantenute
+  \item
+    Il campo comune in entrambi i data set guida la fusione.
+  \item
+    \verb+BY+ richiede un ordinamento.
+  \end{itemize}
+\end{frame}
+
+
+
+
+
+
+% \begin{frame}[containsverbatim]\frametitle{Grafici}
+%   \VerbatimInput{code/p.sas}
+%   PLOT variabile1*variabile2;
+%   RUN;
+% \end{verbatim}
+%        Grafico in output con le due variabili
+%      \end{frame}
+
+
+%      \begin{frame}[containsverbatim]\frametitle{Grafici}
+%        \VerbatimInput{code/p.sas}
+%        PLOT variabile1*variabile2
+%        variabile3*variabile2;
+%        /*
+%        PLOT (variabile1 variabile3)
+%        *variabile2;
+%        */
+%        RUN;
+% \end{verbatim}
+%        Due grafici in output
+%      \end{frame}
+
+
+%      \begin{frame}[containsverbatim]\frametitle{Overlay}
+%        \VerbatimInput{code/p.sas}
+%        PLOT (variabile1 variabile3)
+%        *variabile2 /OVERLAY;
+%        RUN;
+% \end{verbatim}
+%        Due grafici sovrapposti in uno solo
+%      \end{frame}
+
+%      \begin{frame}[containsverbatim]\frametitle{Grafici a bolle}
+%        \VerbatimInput{code/p.sas}
+%        BUBBLE variabile1*variabile2=tipo;
+%        RUN;
+% \end{verbatim}
+%        Grafico in output con le due variabili, \texttt{tipo} viene
+%        rappresentata con un cerchio.
+%      \end{frame}
+
+%      \begin{frame}[containsverbatim]\frametitle{Grafici a barre}
+%        \VerbatimInput{code/p.sas}
+%        BLOCK variabile1 variabile2
+%        /DISCRETE;
+%        RUN;
+% \end{verbatim}
+%        Grafico in output con le due variabili, ottimizzato per valori discreti.
+%      \end{frame}
+
+%      \begin{frame}\frametitle{Opzioni}
+%        \begin{itemize}
+%        \item
+%          \texttt{TITLE1} o \texttt{TITLE2}: titolo
+%        \item
+%          \texttt{SYMBOL1}: per definire il simbolo del primo grafico
+%        \item
+%          \texttt{AXIS1}: per definire gli assi cartesiani
+%        \end{itemize}\end{frame}
+
+%      \begin{frame}\frametitle{Opzioni}
+%        \texttt{goptions reset=global gunit=pct border cback=white\\
+%        colors=(black blue green red)\\
+%        ftitle=swissb ftext=swiss htitle=6 htext=4;
+%      }
+
+%        \vspace{1ex}
+%        \texttt{symbol1 interpol=join value=diamond height=3 color=red;}
+%      \end{frame}
+
+
+
+% %      \begin{frame}[containsverbatim]\frametitle{Esempio}
+%        \VerbatimInput{code/p.sas}
+%        title 'Andamento esami Lab. Stat.-Inf.';
+%        symbol1 color=red interpol=join value=dot height=2;
+%        axis1 order=(2002 to 2005 by 1);
+% \end{verbatim}
+%      \end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Correlazione lineare}
+  \VerbatimInput{code/p25.sas}
+  \begin{itemize}
+  \item
+    Nessuna distinzione fra variabili dipendenti e indipendenti
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Correlazione lineare}
+  \VerbatimInput{code/p26.sas}
+  \begin{itemize}
+  \item
+    \verb!WITH!: variabili dipendenti
+  \item
+    \verb!VAR!: variabili indipendenti
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Correlazione lineare}
+  \VerbatimInput{code/p27.sas}
+  \begin{itemize}
+  \item
+    \verb!BEST!
+  \end{itemize}
+\end{frame}
+
+
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Regressione lineare}
+  \VerbatimInput{code/p32.sas}
+  \begin{itemize}
+  \item
+    Calcola la migliore retta della forma $vary=a*varx+b$ per approssimare
+    i dati.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Grafico di regressione}
+  \VerbatimInput{code/p33.sas}
+  \begin{itemize}
+  \item
+    Disegna la migliore retta della forma $vary=a*varx+b$ per approssimare
+    i dati.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Grafico di regressione}
+  \VerbatimInput{code/p33a.sas}
+  \begin{itemize}
+  \item
+    Disegna sia i punti del data set che la retta di regressione
+  \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Analisi delle frequenze}
+  \VerbatimInput{code/p29.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Analisi delle frequenze}
+  \VerbatimInput{code/p30.sas}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Analisi delle frequenze}
+  \VerbatimInput{code/p31.sas}
+  \begin{itemize}
+  \item
+    \verb+WEIGHT+: variabile che indica un peso per ogni osservazione
+  \item
+    \verb+WEIGHT+: variabile quantitativa
+  \item
+    \verb+TABLES+: variabili qualitative
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Opzioni}
+  \VerbatimInput{code/p31a.sas}
+  \begin{itemize}
+  \item
+    \verb+CHISQ+: $\chi^2$
+  \item
+    \verb+CL+: Intervalli di confidenza
+  \item
+    \verb+MEASURES+: misure di associazione
+  \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
+  \VerbatimInput{code/p35.sas}
+  \begin{itemize}
+  \item
+    Adesso \texttt{formato.} {\`e} utilizzabile in una istruzione  \texttt{format}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
+  \VerbatimInput{code/p36.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
+  \VerbatimInput{code/p37.sas}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Output Delivery System: ODS}
+  \begin{itemize}
+  \item
+    Le procedure inviano dati all'ODS
+  \item
+    Destinazioni: \verb+LISTING+ (standard output), \verb+HTML+, \verb+PDF+,
+    \verb+OUTPUT+ (data set), \verb+MARKUP+ (csv, xml,\ldots), \verb+DOCUMENT+
+  \item
+    Template: tabella, stile
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Output Delivery System}
+  \VerbatimInput{code/p39.sas}
+  \begin{itemize}
+  \item
+    Per avere nel log come ODS interpreta il programma
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Output Delivery System}
+  \VerbatimInput{code/p38a.sas}
+  \begin{itemize}
+  \item
+    Seleziona elemento
+  \item
+    Evitare nome duplicati (Path)
+  \item
+    \verb+ODS EXCLUDE+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Output Delivery System}
+  \VerbatimInput{code/p38.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Output Delivery System}
+  \VerbatimInput{code/p40.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Output Delivery System}
+  \VerbatimInput{code/p40a.sas}
+\end{frame}
+
+\begin{comment}
+  \begin{frame}[containsverbatim]\frametitle{Grafici}
+    \VerbatimInput{code/grafici1.sas}
+  \end{frame}
+
+  \begin{frame}[containsverbatim]\frametitle{Grafici 2}
+    \VerbatimInput{code/grafici2.sas}
+  \end{frame}
+
+  \begin{frame}[containsverbatim]\frametitle{Grafici e Proc Corr}
+    \VerbatimInput{code/grafici3.sas}
+  \end{frame}
+
+
+  \begin{frame}[containsverbatim]\frametitle{Grafici e Proc Reg}
+    \VerbatimInput{code/grafici4.sas}
+  \end{frame}
+\end{comment}
+
+
+
+
+
+\begin{frame}\frametitle{Macro}
+  \begin{itemize}
+  \item
+    Macro = sostituzione con altro testo
+  \item
+    Macro = programma che scrive programmi
+  \item
+    Sostituzione delle macro: prima dell'esecuzione del programma
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Macro variabile}
+  \VerbatimInput{code/p41.sas}
+  \begin{itemize}
+  \item
+    Usato in
+  \end{itemize}
+  \VerbatimInput{code/p42.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Macro programmi}
+  \begin{itemize}
+  \item
+    Programmi che scrivono programmi
+  \end{itemize}
+  \VerbatimInput{code/p43.sas}
+  \begin{itemize}
+  \item
+    La macro viene invocata con
+  \end{itemize}
+  \VerbatimInput{code/p44.sas}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Esempio Macro programma}
+  \VerbatimInput{code/p45.sas}
+  \begin{itemize}
+  \item
+    Esempio di utilizzo
+  \end{itemize}
+  \VerbatimInput{code/p45a.sas}
+\end{frame}
+
+
+
+
+
+\begin{frame}[containsverbatim]\frametitle{Macro vs. programmi}
+  \begin{itemize}
+  \item
+    \verb+%IF+..\verb+%THEN+..\verb+%ELSE+.. vs \verb+IF+..\verb+THEN+..\verb+ELSE+..
+  \item
+    \verb+%DO+ vs \verb+DO+
+  \item
+    In una macro si pu{\`o} includere un intero data step o proc step.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Esempio Macro programma (2)}
+  \VerbatimInput{code/p46.sas}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Esempio Macro programma (2)}
+  \VerbatimInput{code/p46a.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Esempio}
+  \begin{itemize}
+  \item
+    Ordinare un data set solo se un parametro vale 1
+  \end{itemize}
+  \VerbatimInput{code/p48.sas}
+  \begin{itemize}
+  \item
+    Invocato con
+  \end{itemize}
+  \VerbatimInput{code/p49.sas}
+\end{frame}
+
+
+
+\begin{frame}[containsverbatim]\frametitle{CALL SYMPUT}
+  \begin{itemize}
+  \item
+    Leggere i dati da un data set
+  \item
+    Non usare nello stesso DATA STEP di definizione
+  \end{itemize}
+  \VerbatimInput{code/p50.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Licenza d'uso}
+  \small
+
+  Quest'opera {\`e} soggetta alla licenza Creative Commons: Attribuzione-Condividi
+  allo stesso modo 3.0.
+
+  \verb+http://creativecommons.org/licenses/by-sa/3.0/+
+
+  Sei libero di riprodurre, distribuire, comunicare al pubblico, esporre in
+  pubblico, rappresentare, eseguire, recitare e modificare quest'opera
+  alle seguenti condizioni:
+  \begin{itemize}
+  \item
+    Attribuzione — Devi attribuire la paternit{\`a} dell'opera nei modi indicati
+    dall'autore o da chi ti ha dato l'opera in licenza e in modo tale da non
+    suggerire che essi avallino te o il modo in cui tu usi l'opera.
+  \item
+    Condividi allo stesso modo — Se alteri o trasformi quest'opera, o se la usi
+    per crearne un'altra, puoi distribuire l'opera risultante solo con una licenza
+    identica o equivalente a  questa.
+  \end{itemize}
+  \vspace*{1cm}
+\end{frame}
+
+\end{document}
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% TeX-master: "lucidi_SAS_video"
+%%% buffer-file-coding-system: utf-8
+%%% End:

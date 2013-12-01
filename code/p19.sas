@@ -1,0 +1,2 @@
+PROC CONTENTS DATA=data set;
+RUN;

@@ -1,0 +1,3 @@
+%MACRO nome_macro (p1=,p2=);
+macro con %LET %IF %DO...
+%MEND nome_macro;

@@ -1,0 +1,6 @@
+ODS GRAPHICS ON;
+PROC REG DATA=nascar 
+         PLOTS= (DIAGNOSTICS FITPLOT);
+    MODEL puntig=girig;
+RUN;
+ODS GRAPHICS OFF;
