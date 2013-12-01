@@ -46,6 +46,8 @@ tramp
 *.vrb
 *.xdy
 *.tdo
+*.fls
+vc.tex
 
 # SAS
 *.sas7bdat
