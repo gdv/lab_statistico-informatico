@@ -3,8 +3,9 @@ LATEXMK = latexmk -recorder -use-make
 
 pdf: $(TARGETS)
 
-sync:	vc.tex pdf
-	rsync -avz *.pdf Elearning Esami dellavedova@aspic.bio.disco.unimib.it:public_html/didattica/lab_statistico-informatico/
+release:	vc.tex pdf
+	rsync -avz *.pdf ~/Documenti/Didattica/Lab.\ Stat-Inf/Lucidi/
+	rsync -avz Esercizi ~/Documenti/Didattica/Lab.\ Stat-Inf/
 
 vc.tex:	.git/logs/HEAD
 	bash vc
