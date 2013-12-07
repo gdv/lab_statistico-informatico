@@ -1,3 +1,4 @@
+/* punto 1 */
 DATA meteo;
    INFILE 'Z:\FileSAS\meteo.txt' DLM=',' ;
    INPUT prov $ temp1 temp2 temp3 temp4 temp5;
@@ -12,14 +13,8 @@ DATA nomiss;
        IF temp5=. THEN temp5=0;
 RUN;
 
-DATA nomiss;
-    SET meteo;
-    array temp[5];
-    do i = 1 to 5;
-        IF temp[i]=. THEN temp[i]=0;
-        end;
-run;
 
+/* punto 2 */
 data ristrutturato;
     set meteo;
     array temp[5];
@@ -33,11 +28,13 @@ data ristrutturato;
 run;
 
 
+/* punto 3 con funzione */
 data media;
     set meteo;
     media=mean(temp1,temp2,temp3,temp4,temp5);
 run;
 
+/* punto 3 manualmente */
 data media;
     set meteo;
     array temp[5];
