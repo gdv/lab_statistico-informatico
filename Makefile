@@ -1,4 +1,4 @@
-TARGETS=lucidi_SAS_stampa.pdf lucidi_SAS_video.pdf
+TARGETS=lucidi_SAS_stampa.pdf lucidi_SAS_video.pdf esercizi_progettazione.pdf
 LATEXMK = latexmk -recorder -use-make
 
 pdf: $(TARGETS)
@@ -10,6 +10,5 @@ release:	vc.tex pdf
 vc.tex:	.git/logs/HEAD
 	bash vc
 
-
-%.pdf : %.tex vc.tex lucidi_SAS_testo.tex
+lucidi%.pdf : lucidi%.tex vc.tex lucidi_SAS_testo.tex
 	$(LATEXMK) -pdf $<
