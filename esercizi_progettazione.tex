@@ -1,8 +1,10 @@
 \documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb,array}
 \usepackage{amsthm,alltt}
 \usepackage[italian]{babel}
 \usepackage{pgf}
+\usepackage{hyperref}
 %\usepackage[dvips]{graphicx}
 
 \textheight=22cm
@@ -10,8 +12,14 @@
 \oddsidemargin=0.25cm
 \evensidemargin=0.25cm
 
+\immediate\write18{sh ./vc}
+\input{vc}
+
+
 
 \title{Esercizi svolti}
+\author{Gianluca Della Vedova}
+\date{\today, {\tiny revisione \VCRevision}}
 
 \begin{document}
 

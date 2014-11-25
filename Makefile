@@ -12,3 +12,7 @@ vc.tex:	.git/logs/HEAD
 
 lucidi%.pdf : lucidi%.tex vc.tex lucidi_SAS_testo.tex
 	$(LATEXMK) -pdf $<
+
+%.pdf : %.tex vc.tex
+	$(LATEXMK) -pdf $<
+
