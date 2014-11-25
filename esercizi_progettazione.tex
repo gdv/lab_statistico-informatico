@@ -1,0 +1,743 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,array}
+\usepackage{amsthm,alltt}
+\usepackage[italian]{babel}
+\usepackage{pgf}
+%\usepackage[dvips]{graphicx}
+
+\textheight=22cm
+\textwidth=16cm
+\oddsidemargin=0.25cm
+\evensidemargin=0.25cm
+
+
+\title{Esercizi svolti}
+
+\begin{document}
+
+\section{Database universitario}
+
+\subsection{Elenco tabelle}
+
+\noindent
+PERSONA (\textbf{ID}, is\_studente, is\_docente, nome, cognome)\\
+STUDENTE (\textbf{matricola}, persona references persona(ID))\\
+DOCENTE (\textbf{codice}, persona references persona(ID))\\
+CORSO (\textbf{ID}, nome)\\
+OCCORRENZA\_CORSO (\textbf{ID}, corso references corso(ID), anno)\\
+ESAME (\textbf{corso} references occorrenza\_corso(ID), \textbf{docente} references
+docente(codice), \textbf{studente} references studente(matricola), voto, data)
+
+\subsection{Testo esercizio}
+
+\begin{enumerate}
+\item
+Calcolare la media ottenuta in Informatica Generale da chi non ha superato Matematica I.
+\item
+Identificare gli studenti che hanno ottenuto un voto superiore alla media calcolata al
+punto 1.
+\item
+Calcolare il numero massimo di volte che uno studente non ha superato l'esame di
+Informatica Generale
+\item
+Determinare gli studenti interessati dalla soluzione del punto 3.
+\item
+Calcolare quando uno studente ha superato un esame con un docente con cognome uguale allo
+studente.
+\item
+Determinare per ogni docente e per ogni anno quanti esami il docente ha fatto
+in
+quel particolare anno e  la percentuale di esami con successo sugli esami
+totali.
+\item
+Per quali corsi esiste un anno in cui ci sono stati meno esami superati
+rispetto
+all'anno precedente?
+\item
+Calcolare la media ottenuta in Informatica Generale da chi ha fallito almeno
+una volta Matematica I.
+\end{enumerate}
+
+
+\subsection{Interrogazioni}
+
+
+
+\begin{enumerate}
+\item
+Un primo approccio prevede di utilizzare il costrutto \texttt{NOT IN}, mentre
+un secondo approccio {\`e} basato sull'operatore \texttt{EXCEPT}: si noti che
+quest'ultimo {\`e} applicabile solo a select conformi, ovvero il cui risultato
+abbia stesso schema. In entrambi i casi {\`e} fondamentale incrociare le tabelle
+\texttt{esame}, \texttt{occorrenza\_corso}, \texttt{corso} per associare ad
+ogni esame il nome dell'insegnamento a cui si riferisce.
+\begin{verbatim}
+create view esami_superati as
+select matricola, nome, cognome, voto, corso
+from studente, esame, occorrenza_corso, corso, persona
+where persona.ID=studente.persona AND
+  occorrenza_corso.corso=corso.ID AND
+  esame.corso=occorrenza_corso.ID AND
+  esame.studente=studente.matricola AND
+  voto IS NOT NULL;
+\end{verbatim}
+\begin{verbatim}
+select avg(voto)
+from esami_superati
+where corso='Informatica Generale' AND
+matricola NOT IN (
+  select matricola
+  from esami_superati
+  where corso='Matematica I'
+);
+\end{verbatim}
+Nel secondo caso decido di utilizzare EXCEPT al fine di calcolare gli studenti
+che hanno superato Informatica Generale ma non Matematica I.
+\begin{verbatim}
+create view infgen_no_mate(matricola) as (
+select studente
+from esame
+where corso='Informatica Generale' AND voto is not null
+
+except
+
+select studente
+from esami, occorrenza_corso, corso
+where nome='Matematica I' and
+      esami.corso=occorrenza_corso.id and
+          occorrenza_corso.corso=corso.id and
+          voto is not null
+)
+
+select avg(voto)
+from esami, occorrenza_corso, corso, infgen_no_mate
+where nome='Informatica Generale' and
+      esami.corso=occorrenza_corso.id and
+          occorrenza_corso.corso=corso.id and
+          esami.studente=infgen_no_mate.matricola
+\end{verbatim}
+\item
+\begin{verbatim}
+select nome, cognome
+from esami_superati
+where corso='Informatica Generale' AND
+voto > ALL (select avg(voto)
+    from esami_superati
+    where corso='Informatica Generale' AND
+    matricola NOT IN (
+      select matricola
+      from esami_superati
+      where corso='Matematica I'
+    )
+);
+\end{verbatim}
+oppure
+\begin{verbatim}
+create view esame_infgen_no_mate(matricola, voto) as (
+        select esami.studente, esami.voto
+    from esami, occorrenza_corso, corso, infgen_no_mate
+    where nome='Informatica Generale' and
+      esami.corso=occorrenza_corso.id and
+          occorrenza_corso.corso=corso.id and
+          esami.studente=infgen_no_mate.matricola and
+          voto is not null
+)
+
+select matricola
+from esame_infgen_no_mate
+where esami.voto >= all (
+                            select avg(voto)
+                        from esame_infgen_no_mate)
+\end{verbatim}
+\item
+\begin{verbatim}
+create view infgen_nonsup as
+select matricola, count(*) as numero
+from esame, occorrenza_corso, corso
+group by matricola
+where occorrenza_corso.corso=corso.ID AND
+  esame.corso=occorrenza_corso.ID AND
+  corso.nome='Informatica Generale' AND
+  voto IS NULL;
+\end{verbatim}
+\begin{verbatim}
+select max(numero)
+from infgen_nonsup;
+\end{verbatim}
+\item
+\begin{verbatim}
+select matricola, nome, cognome
+from infgen_nonsup join persone on persone.matricola= infgen_nonsup.matricola
+where numero >= ALL
+    (select numero
+    from infgen_nonsup
+);
+\end{verbatim}
+\item
+\begin{verbatim}
+select *
+from studente, esame, occorrenza_corso, corso, persona D, persona S, docente
+where S.ID=studente.persona AND
+  D.ID=docente.persona AND
+  esame.docente=docente.codice AND
+  esame.corso=occorrenza_corso.ID AND
+  esame.studente=studente.matricola AND
+  voto IS NOT NULL AND
+  S.cognome=D.cognome;
+\end{verbatim}
+\item
+\begin{verbatim}
+create view esamiripartiti as
+select codice, count(*) as totali, anno
+from esame
+group by codice. anno
+
+create view esamiripartitipassati as
+select codice, count(*) as totali, anno
+from esame
+where voto is not null
+group by codice. anno
+
+select *, passati/totali as percentuale
+from esamiripartitipassati join esamiripartiti
+where
+esamiripartitipassati.anno = esamiripartiti.anno and
+esamiripartitipassati.codice = esamiripartiti.codice
+\end{verbatim}
+\item
+\begin{verbatim}
+select distinct corso
+from esamiripartitipassati A, esamiripartitipassati B,
+where
+A.anno < B.anno and
+A.corso = B.corso and
+A.totali > B.totali
+\end{verbatim}
+\end{enumerate}
+
+
+\section{Biblioteca}
+
+\subsection{Testo esercizio}
+
+Si desidera modellare i dati relativi alla gestione di una biblioteca. Ogni libro viene
+identificato univocamente dal codice ISBN, ed \`e caratterizzato dal fatto di avere uno o
+pi\`u autori (non verranno effettuate ricerche sugli autori), titolo, codice dewey e genere.
+
+Gli utenti hanno un codice identificativo e viene conservato nome, cognome e numero di
+telefono (quest'ultimo dato \`e facoltativo). Per ogni libro preso in prestito
+segnamo la data di inizio prestito, la data di scadenza e la data in cui \`e
+stato effettivamente restituito (quest'ultimo dato viene posto a NULL se il libro non \`e
+ancora stato restituito).
+
+Modellare la situazione descritta con modello ER. Descrivere la query SQL, e le tabelle
+coinvolte in tale query, che restituisce l'elenco delle persone che, per almeno 3 volte,
+non hanno restituito un libro entro la scadenza. Tale esercizio deve essere
+risolto secondo due versioni: la prima considera soltanto il fatto che ci siano
+state tre restituzioni in ritardo, la seconda anche il fatto che alla data
+odierna ci potrebbero essere dei libri in prestito anche se la data di scadenza
+\`e gi\`a passata.
+
+
+Come si modifica lo schema ER
+se non si ammette la possibilit\`a che un utente prenda in prestito lo stesso
+libro pi\`u di una volta?
+
+Se avessimo il vincolo che un utente pu\`o avere al massimo 5 libri in
+prestito contemporaneamente, come avremmo codificare tale vincolo?
+
+Si calcoli quale libro \`e stato restituito in ritardo pi\`u volte.
+
+\subsection{ER}
+\begin{center}
+\pgfimage[width=15cm]{DB-Biblio}
+\end{center}
+
+Si \`e deciso di utilizzare un'entit\`a per Prestito, invece di una relazione, perch\`e si
+ritiene rilevante rappresentare i prestiti di un libro dismesso dalla libreria, ci\`o in
+quanto viene richiesto di conteggiare le persone che hanno consegnato un libro in ritardo
+per almeno 3 volte. Questo fatto presuppone che Prestito abbia valore a prescindere
+dall'esistenza di Libro, e quindi un'entit\`a \`e preferibile. Si noti che il
+vincolo che il numero di telefono sia opzionale \`e rappresentabile solo con il
+codice SQL di creazione della tabella.
+
+\subsection{Tabelle}
+
+\noindent
+LIBRO (\textbf{ISBN}, Autore, Titolo, Dewey, Genere)\\
+UTENTE (\textbf{codice}, nome, cognome, numerotel)\\
+PRESTITO (\textbf{utente} references utente(codice), \textbf{libro} references libro(ISBN),
+\textbf{scadenza}, restituito, inizio)
+
+\subsection{Query}
+
+\begin{verbatim}
+select codice, nome, cognome
+from utente join prestito on utente(codice)=prestito(utente)
+where codice in
+    (select codice
+    from prestito
+    where restituito>scadenza
+    group by codice
+    having count(*)>=3);
+\end{verbatim}
+
+\noindent
+La versione completa segue:
+
+\begin{verbatim}
+select utente, nome, cognome
+from utente join prestito on utente(codice)=prestito(utente)
+where utente in
+    (select utente
+    from prestito
+    where (restituito>scadenza or today()>scadenza and restituito is null)
+    group by utente, nome, cognome
+    having count(*)>=3);
+\end{verbatim}
+
+
+\newpage
+\section{Rete ferroviaria}
+\subsection{Testo}
+Si vuole rappresentare l'insieme di dati riguardanti una rete ferroviaria. Ogni citt\`a
+viene identificata univocamente tramite il proprio nome, ed ogni tratta consiste in una
+citt\`a di partenza, una citt\`a di arrivo ed una lunghezza epressa in km. Si suppone che non
+esistano stazioni intermedie fra le due citt\`a che compongono una tratta.
+
+Ogni biglietto emesso ha un numero identificativo progressivo ed ha un prezzo, dipendente
+dalla massima percorrenza possibile (tale percorrenza non viene memorizzata). Per ogni
+volta che una tratta viene percorsa si tiene traccia dell'orario di partenza e dell'orario
+di arrivo. Al momento
+della convalida del biglietto viene immesso l'insieme delle tratte che compongono il
+viaggio per cui il biglietto viene utilizzato e data/ora di partenza e arrivo del viaggio.
+
+Si scriva la query SQL che determina su quale tratta sono stati utilizzati pi\`u biglietti
+nel mese di Ottobre 2001.
+
+\subsection{ER}
+\begin{center}
+\pgfimage[width=15cm]{es2}
+\end{center}
+
+Ogni tratta viene univocamente determinata dalle citt\`a di arrivo e partenza. Inoltre
+l'introduzione dell'entit\`a \texttt{occorrenza\_tratta} permette di non duplicare
+l'informazione relativa all'orario di partenza e arrivo da associare ad ogni biglietto:
+infatti la relazione \texttt{biglietto\_utilizzato} permette di individuare tale
+informazione.
+
+\subsection{Tabelle}
+
+\noindent
+CITTA'(\textbf{nome})\\
+TRATTA(\textbf{inizio} references citta'.nome, \textbf{fine} references citta'.nome,
+lunghezza)\\
+BIGLIETTO(prezzo, \textbf{ID})\\
+OCCORRENZA\_TRATTA(\textbf{inizio} references citta'.nome, \textbf{fine} references
+citta'.nome, \textbf{partenza}, arrivo)\\
+BIGLIETTO\_UTILIZZATO(\textbf{ID} references biglietto, \textbf{inizio} references
+citta'(nome), \textbf{fine} references citta'(nome), \textbf{partenza} references occorrenza\_tratta)
+
+\subsection{Query}
+\begin{verbatim}
+create view usati_ott as
+select count(*) as quanti, inizio, fine
+from biglietto_utilizzato
+where partenza <= '31/10/2000' and partenza >= '01/10/2000'
+group by partenza, arrivo;
+
+select inizio, fine
+from usati_ott
+where quanti >= ALL
+    (select quanti
+     from usati_ott);
+\end{verbatim}
+
+\newpage
+\section{Campionato di calcio}
+
+\subsection{Testo}
+Un campionato di calcio viene disputato tra un insieme di squadre. Ogni incontro \`e svolto
+fra due squadre, una detta ospitante ed una detta ospite. Per ogni incontro, oltre alle
+due squadre coinvolte, vengono registrati il risultato (inteso come numero di reti segnate
+dalle ognuna delle due squadre), la data ed i giocatori che hanno
+realizzato ogni rete, si memorizza anche il minuto della partita in cui \`e stata
+realizzata la rete.
+
+In un campionato ogni squadra incontra ogni altra squadra due volte, di cui una come
+squadra ospite ed una come squadra ospitante.
+
+Di ogni calciatore viene registrato nome, cognome e data di nascita. Si assume inoltre che
+un giocatore non possa cambiare squadra durante il campionato.
+
+Si progetti una base di dati per rappresentare la situazione sopra descritta, sia come
+modello ER che come insieme di tabelle.
+
+Si scriva una query SQL che restituisce quale squadra ha vinto pi\`u partite, una
+query per determinare il calciatore che ha segnato pi\`u reti ed una query per
+determinare in  quale partita si \`e realizzato il numero maggiore di reti (somma
+fra le reti della squadra ospite e quelli della squadra ospitante).
+
+
+Come viene modificato lo schema se una squadra pu\`o incontrare un'altra squadra
+pi\`u di due volte?
+
+Come viene modificato lo schema se un giocatore pu\`o cambiare squadra durante il
+campionato?
+
+\subsection{ER}
+\begin{center}
+\pgfimage[width=15cm]{es3}
+\end{center}
+
+\subsection{Tabelle}
+
+\noindent
+SQUADRA (\underline{nome})\\
+PARTITA (\underline{ospite} references squadra(nome), \underline{ospitante} references
+squadra(nome), data)\\
+GIOCATORE (\underline{nome}, \underline{cognome}, \underline{natoil}, giocain references
+squadra(nome))\\
+RETE (\underline{nome} references giocatore, \underline{cognome} references giocatore,
+\underline{data\_di\_nascita} references giocatore, \underline{ospite}
+references squadra(nome), \underline{ospitante} references squadra(nome), minuto)
+
+\subsection{Query}
+
+\begin{verbatim}
+create view retipartitasquadra as
+  select ospite, ospitante, giocain as squadra, count(*) as quanti
+  from partita, rete, giocatore
+  where giocatore.nome =rete.nome and
+        giocatore.cognome =rete.cognome and
+        giocatore.natoil =rete.natoil and
+        partita.ospite = rete.ospite and
+        partita.ospitante = rete.ospitante
+  group by partita.ospite, partita.ospitante, giocatore.gioca_in
+
+
+create view risultati as
+  select R1.quanti as retiospitante, R2.quanti as retiospite
+  from retipartitasquadra R1, retipartitasquadra R2
+  where R1.ospite = R2.ospite and
+        R1.ospitante = R2.ospitante and
+        R1.squadra <> R2.squadra
+        R1.ospitante = R1.squadra
+
+
+
+create view vittorie as
+   select ospite as squadra
+   from partita
+   where reti_ospite>reti_ospitante
+ union all
+   select ospitante as squadra
+   from partita
+   where reti_ospite<reti_ospitante
+
+select nome
+from vittorie
+group by squadra
+having count(*) > ALL (
+    select count(*)
+    from vittorie
+    group by squadra);
+\end{verbatim}
+
+
+\subsection{Varie}
+\texttt{Rete} deve essere una entit{\`a}, in quanto {\`e} ragionevolmente atteso che un
+giocatore segni pi{\`u} di una rete in una partita, pertanto l'attributo \texttt{minuto}
+deve essere parte della chiave.
+
+Se il numero di partite fra una coppia di squadre non \`e limitato, allora
+\texttt{data} deve fare parte della chiave dell'entit\`a \texttt{partita}.
+
+Se un giocatore pu\`o cambiare squadra, allora la cardinalit\`a della relazione
+\texttt{gioca in} non pu\`o pi\`u essere $(1,1)$. In questo caso deve anche
+diventare una tabella a s\`e stante. Inoltre non {\`e} pi{\`u} possibile inferire il
+risultato dalla relazione rete, in quanto non si pu{\`o} stabilire a favore di quale
+squadra sia stata realizzata una rete. Diventa quindi necessario (1)
+introdurre una relazione \texttt{partecipa} che lega le entit{\`a} \texttt{giocatore} e
+\texttt{partita}, oppure (2) introdurre una relazione \texttt{a favore} che lega le entit{\`a} \texttt{rete} e
+\texttt{squadra}. Dalle numerosit{\`a} ragionevolmente attese, quest'ultima
+ipotesi mi sembra preferibile.
+
+\newpage
+\section{Servizio di fornitura di energia elettrica}
+
+\subsection{Testo}
+
+Viene fornita energia elettrica ad un insieme di utenze, con la possibilit\`a che nuove
+utenze vengano aggiunte nel tempo. Per ogni utenza registriamo, oltre ad un codice
+identificativo, nome, cognome e
+l'attivazione dell'utenza. Quando un contratto viene attivato, si registra un codice
+identificativo, la data in cui
+sono stati completati i lavori ed il tecnico responsabile dell'impianto.
+
+Per ogni utenza vengono inoltre memorizzati i dati storici relativi ad ogni lettura del
+contatore. Dopo ogni lettura viene emessa una fattura di cui memorizziamo la lettura,
+prima e dopo il periodo di riferimento della fattura stessa, la data di emissione e
+l'intestatario. Nel caso in cui non sia stata possibile la lettura, la fattura viene
+emessa senza avere una lettura di riferimento.
+
+Disegnare lo schema ER e le tabelle.
+
+Query 1: l'ultimo importo pagato da ogni utente di cognome Rossi.
+
+Query 2: le letture da mettere in fattura del 01.07.2001 del cliente con codice 003 (tale
+fattura ha una lettura di riferimento).
+
+Modificare lo schema per incorporare la seguente modifica: l'attivazione avviene
+tramite una sequenza di sopralluoghi effettuati presso la stessa utenza. Ogni
+sopralluogo viene fatto da un tecnico potenzialmente diverso. L'attivazione
+avviene quando l'ultimo sopralluogo verifica che sono verificate le condizioni
+per l'attivazione.
+\subsection{ER}
+\begin{center}
+\pgfimage[width=15cm]{es4}
+\end{center}
+
+\subsection{Tabelle}
+
+\noindent
+UTENZA (nome, cognome, \underline{ID}, attivazione unique, data\_attivazione,
+tecnico references tecnico(ID))\\
+TECNICO (nome, cognome, \underline{ID})\\
+FATTURA (\underline{numero}, data, importo, quantita', utente references utenza(ID) null,
+data\_lettura null)\\
+
+\subsection{Query}
+
+\begin{verbatim}
+create view fattrossi as
+    select ID, importo, data_fattura
+    from utenza join fattura on utenza.ID=fattura.utente
+    where cognome='Rossi';
+
+select importo, data
+from fattrossi F
+where data >= ALL
+    (select data
+     from fattrossi F1
+     where f.numero=f1.numero);
+\end{verbatim}
+
+\hrule
+
+\begin{verbatim}
+select lettura
+from fattura
+where data<'01/01/2001' AND
+  data >= ALL (
+    select data
+    from fattura
+    where data<'01/01/2001');
+\end{verbatim}
+
+\section{Conferenza scientifica}
+
+\subsection{Testo}
+
+Una conferenza viene organizzata nel seguente modo: uno (o pi\`u) autori sottopongono un
+articolo affinch\`e venga valutato e, alla fine del processo di valutazione,
+accettato oppure rifiutato alla conferenza. Ad ogni
+articolo viene assegnato un numero progressivo, e si tiene traccia del titolo e degli
+autori. Per ogni autore si memorizzano il nome, il cognome e l'indirizzo di posta
+elettronica che identifica univocamente ogni autore.
+
+La conferenza ha un comitato direttivo i cui membri possono (ma non sono obbligati)
+sottoporre articoli. Ogni articolo viene valutato da almeno 3 ed al pi\`u 5 revisori, di cui
+esattamente uno deve essere membro del comitato direttivo. Si noti che non tutti
+i membri del comitato direttivo devono essere revisori.
+
+Nessuno pu\`o essere revisone di un articolo di cui \`e autore. Al termine della revisione,
+ogni revisore decide un voto da assegnare agli articoli valutati. Solo alcuni articoli
+vengono accettati alla conferenza, conseguentemente lo stato di ogni articolo \`e
+accettato, oppure rifiutato, oppure ancora in revisione. Di ogni revisore o
+membro del comitato direttivo
+vengono memorizzati numero di telefono e fax, oltre ai dati identificativi di un autore.
+
+Descrivere modello ER, tabelle e codice SQL per le sequenti interrogazioni.
+\begin{enumerate}
+\item
+Quale autore ha avuto il massimo numero di articoli accettati?
+\item
+Quali revisori non hanno ancora inviato la loro valutazione?
+\item
+Visualizzare la media delle valutazioni di ogni articolo.
+\item
+Visualizzare la media delle valutazioni degli articoli scritti da ogni singola persona.
+\item
+Visualizzare i 20 articoli con la media pi\`u alta.
+\end{enumerate}
+Come si modifica lo schema se i membri del comitato direttivo non possono essere
+autori di articoli sottoposti alla conferenza?
+\subsection{ER}
+\begin{center}
+\pgfimage[width=15cm]{es5}
+\end{center}
+
+\subsection{Tabelle}
+
+\noindent
+ARTICOLO (\underline{ID}, titolo, stato)\\
+PERSONA (nome, cognome, \underline{email}, telefono, fax, is\_CD)\\
+SOTTOPONE (lavoro REFERENCES artiolo(ID), autore REFERENCES autore(email))\\
+VALUTA (revisore REFERENCES persona(email), lavoro REFERENCES artiolo(ID))
+
+\subsection{SQL}
+
+1.
+\begin{verbatim}
+create view lavori_accettati as
+  select id, titolo, nome, cognome
+  from articolo, sottopone, autore
+  where articolo.ID=sottopone.lavoro AND
+     sottopone.autore=autore.email AND
+    accettato;
+
+select email, nome, cognome
+from lavori_accettati
+group by email, nome, cognome
+having count(*) >= ALL
+  (select count(*)
+  from lavori_accettati
+  group by email);
+\end{verbatim}
+
+2.
+\begin{verbatim}
+select distinct nome, cognome, email
+from persona join valuta on persona.email=valuta.revisore
+where voto is null;
+\end{verbatim}
+
+3.
+\begin{verbatim}
+select avg(voto), titolo, ID
+from articolo join valuta on articolo.ID=valuta.articolo
+group by ID;
+\end{verbatim}
+
+4.
+\begin{verbatim}
+select avg(voto), nome, cognome, email
+from valuta, sottopone, articolo
+where articolo.ID=sottopone.lavoro AND
+    valuta.lavoro=articolo.ID
+group by email;
+\end{verbatim}
+
+
+\newpage
+\section{Catena di cinema}
+
+\subsection{Testo}
+
+Una catena di cinema ha sale in varie citt\`a. Di ogni cinema si memorizza la
+citt\`a e la via in cui si trova. Alcuni cinema sono multisala, mentre altri
+contengono un'unica sala. Di ogni sala si memorizza la capienza totale.
+
+Ogni film ha un titolo (si assuma che non esistano due film con stesso titolo),
+l'anno di produzione
+un regista e vari attori. Per ogni persona esiste un codice identificativo.
+
+Viene inoltre tenuta traccia di ogni proiezione effettuata, ovvero del film
+proiettato, in quale sala \`e avvenuta la registrazione, ed il numero di biglietti
+venduti.
+
+Disegnare lo schema ER e le tabelle.
+
+Query 1: l'elenco dei film in cui il numero dei biglietti totali venduti \`e stato almeno
+l'80\% della capienza totale (sommata su tutte le proiezioni del film).
+
+Query 2: l'elenco dei film che hanno fatto il tutto esaurito in almeno due
+spettacoli tenuti nella stessa citt\`a.
+
+Query 3: l'elenco degli registi che si sono diretti in un film.
+
+Query 4: I film che hanno venduto pi\`u biglietti.
+
+Query 5: l'elenco dei film che hanno fatto il tutto esaurito in almeno due citt\`a.
+\subsection{ER}
+\begin{center}
+\pgfimage[width=15cm]{es-cinema}
+
+\end{center}
+
+\subsection{Tabelle}
+\noindent
+PERSONE (\underline{ID}, cognome, nome, data\_nascita)\\
+FILM (\underline{titolo}, regista references persone(ID))\\
+CINEMA (\underline{citt\`a}, \underline{via})\\
+SALA (ID, citta references CINEMA(citta), via references
+CINEMA(via), capienza)\\
+PROIEZIONE (\underline{film}  references FILM(titolo), \underline{citta\_sala}
+references CINEMA(citta), \underline{sala} references SALA(ID), inizio, data)\\
+ATTORE (\underline{persona}   references PERSONA(ID), \underline{film}   references
+FILM(titolo))
+
+\subsection{SQL}
+
+Query 1.
+\begin{alltt}
+create view venditeproiezione as
+  select titolo, sum(capienza) as capienzatot, sum(venduti) as vendutitot
+  from proiezione, sala
+  where sala.ID=proiezione.sala
+  group by titolo;
+
+select titolo
+from venditeproiezione
+where vendutitot/capienzatot>=0.8;
+\end{alltt}
+
+Query 2.
+\begin{alltt}
+create view esauriti as
+  select titolo, citt\`a, via, count(*) as numero
+  from proiezione, sala
+  where sala.citt\`a=proiezione.citt\`a AND
+      sala.ID=proiezione.sala AND proiezione.venduti=sala.capienza;
+  group by titolo, citt\`a
+
+select titolo
+from esauriti
+where numero>=2;
+\end{alltt}
+
+Query 3.
+\begin{alltt}
+select nome, cognome
+from persone, attore, film
+where film.regista=attore.persona AND
+    attore.film=film.titolo AND attore.persona=persone.id;
+\end{alltt}
+
+Query 4.
+\begin{alltt}
+
+select titolo
+from venditeproiezione
+where vendutitot >= ALL (
+select vendutitot
+from venditeproiezione);
+\end{alltt}
+
+
+Query 5.
+\begin{alltt}
+
+select E1.titolo
+from esauriti E1, esauriti E2
+where E1.titolo=E2.titolo and
+      E1.citt\`a <> E2.citt\`a
+\end{alltt}
+
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% End:
