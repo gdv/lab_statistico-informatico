@@ -97,6 +97,10 @@
   \VerbatimInput{code/p1.sas}
 \end{frame}
 
+\begin{frame}\frametitle{Data Step: dati nel programma}
+  \VerbatimInput{code/p0.sas}
+\end{frame}
+
 
 \begin{frame}\frametitle{Valori mancanti}
   \begin{itemize}
@@ -105,7 +109,6 @@
   \item
     Inseriti come spazi o punti
   \end{itemize}\end{frame}
-
 
 \begin{frame}\frametitle{Data Step: Importazione}
   \begin{itemize}
@@ -387,8 +390,26 @@
 \end{frame}
 
 
+
 \begin{frame}[containsverbatim]\frametitle{Riepilogo data set}
   \VerbatimInput{code/p19.sas}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
+  \VerbatimInput{code/p35.sas}
+  \begin{itemize}
+  \item
+    Adesso \texttt{formato.} {\`e} utilizzabile in una istruzione  \texttt{format}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
+  \VerbatimInput{code/p36.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
+  \VerbatimInput{code/p37.sas}
 \end{frame}
 
 
@@ -396,7 +417,6 @@
 \begin{frame}[fragile]\frametitle{Data Step - copia }
   \VerbatimInput{code/p9.sas}
 \end{frame}
-
 
 
 \begin{frame}[fragile]\frametitle{Data Step - copia }
@@ -850,63 +870,63 @@ Pavia     21  5                   V
 %      \end{frame}
 
 
-\begin{frame}[containsverbatim]\frametitle{Correlazione lineare}
-  \VerbatimInput{code/p25.sas}
-  \begin{itemize}
-  \item
-    Nessuna distinzione fra variabili dipendenti e indipendenti
-  \end{itemize}
-\end{frame}
+% \begin{frame}[containsverbatim]\frametitle{Correlazione lineare}
+%   \VerbatimInput{code/p25.sas}
+%   \begin{itemize}
+%   \item
+%     Nessuna distinzione fra variabili dipendenti e indipendenti
+%   \end{itemize}
+% \end{frame}
 
 
-\begin{frame}[containsverbatim]\frametitle{Correlazione lineare}
-  \VerbatimInput{code/p26.sas}
-  \begin{itemize}
-  \item
-    \verb!WITH!: variabili dipendenti
-  \item
-    \verb!VAR!: variabili indipendenti
-  \end{itemize}
-\end{frame}
+% \begin{frame}[containsverbatim]\frametitle{Correlazione lineare}
+%   \VerbatimInput{code/p26.sas}
+%   \begin{itemize}
+%   \item
+%     \verb!WITH!: variabili dipendenti
+%   \item
+%     \verb!VAR!: variabili indipendenti
+%   \end{itemize}
+% \end{frame}
 
 
-\begin{frame}[containsverbatim]\frametitle{Correlazione lineare}
-  \VerbatimInput{code/p27.sas}
-  \begin{itemize}
-  \item
-    \verb!BEST!
-  \end{itemize}
-\end{frame}
+% \begin{frame}[containsverbatim]\frametitle{Correlazione lineare}
+%   \VerbatimInput{code/p27.sas}
+%   \begin{itemize}
+%   \item
+%     \verb!BEST!
+%   \end{itemize}
+% \end{frame}
 
 
 
 
 
-\begin{frame}[containsverbatim]\frametitle{Regressione lineare}
-  \VerbatimInput{code/p32.sas}
-  \begin{itemize}
-  \item
-    Calcola la migliore retta della forma $vary=a*varx+b$ per approssimare
-    i dati.
-  \end{itemize}
-\end{frame}
+% \begin{frame}[containsverbatim]\frametitle{Regressione lineare}
+%   \VerbatimInput{code/p32.sas}
+%   \begin{itemize}
+%   \item
+%     Calcola la migliore retta della forma $vary=a*varx+b$ per approssimare
+%     i dati.
+%   \end{itemize}
+% \end{frame}
 
-\begin{frame}[containsverbatim]\frametitle{Grafico di regressione}
-  \VerbatimInput{code/p33.sas}
-  \begin{itemize}
-  \item
-    Disegna la migliore retta della forma $vary=a*varx+b$ per approssimare
-    i dati.
-  \end{itemize}
-\end{frame}
+% \begin{frame}[containsverbatim]\frametitle{Grafico di regressione}
+%   \VerbatimInput{code/p33.sas}
+%   \begin{itemize}
+%   \item
+%     Disegna la migliore retta della forma $vary=a*varx+b$ per approssimare
+%     i dati.
+%   \end{itemize}
+% \end{frame}
 
-\begin{frame}[containsverbatim]\frametitle{Grafico di regressione}
-  \VerbatimInput{code/p33a.sas}
-  \begin{itemize}
-  \item
-    Disegna sia i punti del data set che la retta di regressione
-  \end{itemize}
-\end{frame}
+% \begin{frame}[containsverbatim]\frametitle{Grafico di regressione}
+%   \VerbatimInput{code/p33a.sas}
+%   \begin{itemize}
+%   \item
+%     Disegna sia i punti del data set che la retta di regressione
+%   \end{itemize}
+% \end{frame}
 
 
 
@@ -947,23 +967,6 @@ Pavia     21  5                   V
 
 
 
-
-\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
-  \VerbatimInput{code/p35.sas}
-  \begin{itemize}
-  \item
-    Adesso \texttt{formato.} {\`e} utilizzabile in una istruzione  \texttt{format}.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
-  \VerbatimInput{code/p36.sas}
-\end{frame}
-
-
-\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
-  \VerbatimInput{code/p37.sas}
-\end{frame}
 
 \begin{frame}[containsverbatim]\frametitle{Output Delivery System: ODS}
   \begin{itemize}
@@ -1036,97 +1039,97 @@ Pavia     21  5                   V
 
 
 
-\begin{frame}\frametitle{Macro}
-  \begin{itemize}
-  \item
-    Macro = sostituzione con altro testo
-  \item
-    Macro = programma che scrive programmi
-  \item
-    Sostituzione delle macro: prima dell'esecuzione del programma
-  \end{itemize}
-\end{frame}
+% \begin{frame}\frametitle{Macro}
+%   \begin{itemize}
+%   \item
+%     Macro = sostituzione con altro testo
+%   \item
+%     Macro = programma che scrive programmi
+%   \item
+%     Sostituzione delle macro: prima dell'esecuzione del programma
+%   \end{itemize}
+% \end{frame}
 
-\begin{frame}[containsverbatim]\frametitle{Macro variabile}
-  \VerbatimInput{code/p41.sas}
-  \begin{itemize}
-  \item
-    Usato in
-  \end{itemize}
-  \VerbatimInput{code/p42.sas}
-\end{frame}
-
-
-\begin{frame}[containsverbatim]\frametitle{Macro programmi}
-  \begin{itemize}
-  \item
-    Programmi che scrivono programmi
-  \end{itemize}
-  \VerbatimInput{code/p43.sas}
-  \begin{itemize}
-  \item
-    La macro viene invocata con
-  \end{itemize}
-  \VerbatimInput{code/p44.sas}
-\end{frame}
-
-\begin{frame}[containsverbatim]\frametitle{Esempio Macro programma}
-  \VerbatimInput{code/p45.sas}
-  \begin{itemize}
-  \item
-    Esempio di utilizzo
-  \end{itemize}
-  \VerbatimInput{code/p45a.sas}
-\end{frame}
+% \begin{frame}[containsverbatim]\frametitle{Macro variabile}
+%   \VerbatimInput{code/p41.sas}
+%   \begin{itemize}
+%   \item
+%     Usato in
+%   \end{itemize}
+%   \VerbatimInput{code/p42.sas}
+% \end{frame}
 
 
+% \begin{frame}[containsverbatim]\frametitle{Macro programmi}
+%   \begin{itemize}
+%   \item
+%     Programmi che scrivono programmi
+%   \end{itemize}
+%   \VerbatimInput{code/p43.sas}
+%   \begin{itemize}
+%   \item
+%     La macro viene invocata con
+%   \end{itemize}
+%   \VerbatimInput{code/p44.sas}
+% \end{frame}
+
+% \begin{frame}[containsverbatim]\frametitle{Esempio Macro programma}
+%   \VerbatimInput{code/p45.sas}
+%   \begin{itemize}
+%   \item
+%     Esempio di utilizzo
+%   \end{itemize}
+%   \VerbatimInput{code/p45a.sas}
+% \end{frame}
 
 
 
-\begin{frame}[containsverbatim]\frametitle{Macro vs. programmi}
-  \begin{itemize}
-  \item
-    \verb+%IF+..\verb+%THEN+..\verb+%ELSE+.. vs \verb+IF+..\verb+THEN+..\verb+ELSE+..
-  \item
-    \verb+%DO+ vs \verb+DO+
-  \item
-    In una macro si pu{\`o} includere un intero data step o proc step.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[containsverbatim]\frametitle{Esempio Macro programma (2)}
-  \VerbatimInput{code/p46.sas}
-\end{frame}
-
-\begin{frame}[containsverbatim]\frametitle{Esempio Macro programma (2)}
-  \VerbatimInput{code/p46a.sas}
-\end{frame}
 
 
-\begin{frame}[containsverbatim]\frametitle{Esempio}
-  \begin{itemize}
-  \item
-    Ordinare un data set solo se un parametro vale 1
-  \end{itemize}
-  \VerbatimInput{code/p48.sas}
-  \begin{itemize}
-  \item
-    Invocato con
-  \end{itemize}
-  \VerbatimInput{code/p49.sas}
-\end{frame}
+% \begin{frame}[containsverbatim]\frametitle{Macro vs. programmi}
+%   \begin{itemize}
+%   \item
+%     \verb+%IF+..\verb+%THEN+..\verb+%ELSE+.. vs \verb+IF+..\verb+THEN+..\verb+ELSE+..
+%   \item
+%     \verb+%DO+ vs \verb+DO+
+%   \item
+%     In una macro si pu{\`o} includere un intero data step o proc step.
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}[containsverbatim]\frametitle{Esempio Macro programma (2)}
+%   \VerbatimInput{code/p46.sas}
+% \end{frame}
+
+% \begin{frame}[containsverbatim]\frametitle{Esempio Macro programma (2)}
+%   \VerbatimInput{code/p46a.sas}
+% \end{frame}
+
+
+% \begin{frame}[containsverbatim]\frametitle{Esempio}
+%   \begin{itemize}
+%   \item
+%     Ordinare un data set solo se un parametro vale 1
+%   \end{itemize}
+%   \VerbatimInput{code/p48.sas}
+%   \begin{itemize}
+%   \item
+%     Invocato con
+%   \end{itemize}
+%   \VerbatimInput{code/p49.sas}
+% \end{frame}
 
 
 
-\begin{frame}[containsverbatim]\frametitle{CALL SYMPUT}
-  \begin{itemize}
-  \item
-    Leggere i dati da un data set
-  \item
-    Non usare nello stesso DATA STEP di definizione
-  \end{itemize}
-  \VerbatimInput{code/p50.sas}
-\end{frame}
+% \begin{frame}[containsverbatim]\frametitle{CALL SYMPUT}
+%   \begin{itemize}
+%   \item
+%     Leggere i dati da un data set
+%   \item
+%     Non usare nello stesso DATA STEP di definizione
+%   \end{itemize}
+%   \VerbatimInput{code/p50.sas}
+% \end{frame}
 
 
 \begin{frame}[containsverbatim]\frametitle{Licenza d'uso}

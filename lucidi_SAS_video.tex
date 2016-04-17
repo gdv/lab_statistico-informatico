@@ -1,6 +1,7 @@
-\documentclass[12pt, serif, professionalfont]{beamer}
-\usepackage{pxfonts}
-
+\documentclass[12pt]{beamer}
+\usepackage{mathptmx}
+\usepackage[scaled=0.9]{helvet}
+%\usepackage{courier}
 \usepackage{fancyvrb}
 \RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}{frame=single, 
 fontsize=\scriptsize, 
@@ -12,11 +13,12 @@ formatcom=\color{orange}}
 \usepackage{listings}
 \lstset{commentstyle=\color{orange}, keywordstyle=\color{yellow} }
 
-
 \usetheme[⟨options⟩]{Boadilla}
 \useoutertheme{split}
 \usecolortheme{albatross}
 %\setbeamercolor*{normal text}{fg=white!65!black,bg=blue!80!black}
+%\usefonttheme{professionalfont}
+\usefonttheme[onlymath]{serif}
 
 %\usepackage{wallpaper}
 %\CenterWallPaper{0.8}{logounimib}
