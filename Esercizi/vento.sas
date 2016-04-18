@@ -22,55 +22,39 @@ proc means data=vento n;
     class anno;
 run;
 
-/* punto 3 */
+/* oppure */
 proc freq data=corso.vento;
-        tables anno;
-        where velocita ne .;
+    tables anno;
+    where velocita ne .;
 run;
 
-/* punto 4 */
+/* punto 3 */
 proc means data=verticale2 nway noprint;
-        var velocita;
-        class stazione;
-        output out=punto4 mean=media;
+    var velocita;
+    class stazione;
+    output out=punto4 mean=media;
 run;
 proc means data=punto4 noprint min;
-        var media;
-        id stazione;
-        output out=punto4b minid=quale;
+    var media;
+    id stazione;
+    output out=punto4b minid=quale;
 run;
 proc print data=punto4b; var quale; run;
 
+/* punto 4 */
+proc freq data=verticale;
+    tables stazione*anno;
+    weight velocita;
+run;
+
 /* punto 5 */
+ods trace on;
 proc freq data=verticale;
-        tables stazione*anno;
-        weight velocita;
+    tables stazione*anno;
+    weight velocita;
+    ODS OUTPUT  Freq.Table1.CrossTabFreqs = dataset2;
 run;
-
-/* punto 6 */
-proc corr data=vento;
-        var rilevazione1-rilevazione12;
-run;
-
-/* punto 7 */
-proc corr data=vento best=2;
-        var rilevazione1-rilevazione12;
-run;
-proc reg data=vento;
-        model rilevazione5=rilevazione6;
-        plot (p. rilevazione5)*rilevazione6 /overlay;
-run;
-quit;
-
-
-/* punto 8 */
-    ods trace on;
-proc freq data=verticale;
-        tables stazione*anno;
-        weight velocita;
-        ODS OUTPUT  Freq.Table1.CrossTabFreqs = dataset2;
-run;
-    ods trace off;
+ods trace off;
 
 data dataset2;
     set dataset2;

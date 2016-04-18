@@ -49,152 +49,111 @@ proc means data=a.fema mean max min;
 run;
 
 /* punto 5 */
-proc corr data=a.fema;
-        var FederalShareObligated NumberProjects;
+data punto8;
+    set a.fema;
+    StanziamentoMedio=FederalShareObligated/NumberProjects;
+    if state eq 'Texas';
 run;
 
 
 /* punto 6 */
-
-%macro punto6(inizio=,fine=);
-proc corr data=a.fema;
-        var FederalShareObligated NumberProjects;
-        where DeclarationDate >= "&inizio"d and DeclarationDate <= "&fine"d ;
-run;
-%mend punto6;
-
-
-%punto6(inizio=26Aug1998, fine=26Aug1998);
-
-/* punto 7 */
-proc reg data=a.fema;
-        model FederalShareObligated=NumberProjects;
-        plot (predicted. FederalShareObligated)* NumberProjects /overlay;
-run;
-
-/* punto 8 */
-data punto8;
-        set a.fema;
-        StanziamentoMedio=FederalShareObligated/NumberProjects;
-        if state eq 'Texas';
-run;
-
-
-/* punto 9 */
-%macro punto9(stato=);
-data punto9_&stato;
-        set a.fema;
-        StanziamentoMedio=FederalShareObligated/NumberProjects;
-        if state eq "&stato";
-run;
-%mend punto9;
-
-%punto9(stato=Texas);
-%punto9(stato=Alabama);
-
-/* punto 10 */
 proc means data=a.fema noprint nway;
-        var FederalShareObligated;
-        class state;
-        output out=punto10 sum=totale;
+    var FederalShareObligated;
+    class state;
+    output out=punto10 sum=totale;
 run;
 
 proc means data=punto10 noprint;
-        var totale;
-        id state;
-        output out=punto10a maxid=quale_stato;
+    var totale;
+    id state;
+    output out=punto10a maxid=quale_stato;
 run;
 
 proc print data=punto10a;
-        var quale_stato;
+    var quale_stato;
 run;
 
-/* punto 11 */
+/* punto 7 */
 proc freq data=a.fema;
-        weight FederalShareObligated;
-        tables state*EducationApplicant;
-        where FederalShareObligated >= 0;
+    weight FederalShareObligated;
+    tables state*EducationApplicant;
+    where FederalShareObligated >= 0;
 run;
 
-/* punto 12 */
+/* punto 8 */
 
 proc freq data=a.fema;
-        weight FederalShareObligated;
-        tables state*EducationApplicant;
-        where FederalShareObligated >= 0;
-        ods output Freq.Table1.CrossTabFreqs=punto12;
+    weight FederalShareObligated;
+    tables state*EducationApplicant;
+    where FederalShareObligated >= 0;
+    ods output Freq.Table1.CrossTabFreqs=punto12;
 run;
 
-/* punto 13 */
+/* punto 9 */
 proc means data=a.fema noprint nway;
-        class state;
-        output out=dim n=numero;
+    class state;
+    output out=dim n=numero;
 run;
 proc means data=dim max;
-        var numero;
+    var numero;
 run;
 
 
-%let dimensione= 7384;
 proc sort data=a.fema;
-        by state;
+    by state;
 run;
 
 
 data ristrutturato;
-        set a.fema;
-        by state;
-        array destinatario[&dimensione] $;
-        array stanziamento[&dimensione];
-        retain destinatario1-destinatario&dimensione;
-        retain stanziamento1-stanziamento&dimensione;
+    set a.fema;
+    by state;
+    array destinatario[7384] $;
+    array stanziamento[7384];
+    retain destinatario1-destinatario7384;
+    retain stanziamento1-stanziamento7384;
 
-        if first.state then do;
-                do i=1 to &dimensione;
-                        destinatario[i]=.;
-                        stanziamento[i]=.;
-                end;
-                i=0;
+    if first.state then do;
+        do i=1 to &dimensione;
+            destinatario[i]=.;
+            stanziamento[i]=.;
+            end;
+        i=0;
         end;
 
-        i+1;
-        destinatario[i]= ApplicantName ;
-        stanziamento[i]=		FederalShareObligated ;
+    i+1;
+    destinatario[i]= ApplicantName ;
+    stanziamento[i]= FederalShareObligated ;
 
-        if last.state then output;
-        keep state destinatario1-destinatario&dimensione
-                        stanziamento1-stanziamento&dimensione;
+    if last.state then output;
+    keep state destinatario1-destinatario7384
+        stanziamento1-stanziamento7384;
 run;
 
 proc print data=ristrutturato;run;
 
-/* punto 14 */
+/* punto 10 */
 data _NULL_;
-        set ristrutturato;
-        file 'z:\FileSAS\fema-output.txt' dlm=';' dsd lrecl=99999;
-        put state $:40. (destinatario1-destinatario&dimensione) ($:99.)
-                        stanziamento1-stanziamento&dimensione;
+    set ristrutturato;
+    file 'z:\FileSAS\fema-output.txt' dlm=';' dsd lrecl=99999;
+    put state $:40. (destinatario1-destinatario&dimensione) ($:99.)
+        stanziamento1-stanziamento&dimensione;
 run;
 
-/* punto 15 */
+/* punto 11 */
 data legenda;
-        infile 'z:\FileSAS\FEMA2.txt' truncover;
-        input livello 1-2 IncidentType $ 3-99 ;
+    infile 'z:\FileSAS\FEMA2.txt' truncover;
+    input livello 1-2 IncidentType $ 3-99 ;
 run;
 
 proc sort data=a.fema;
-        by IncidentType;
+    by IncidentType;
 run;
 proc sort data=legenda;
-        by IncidentType;
+    by IncidentType;
 run;
 
+/* punto 12 */
 data punto15;
-        merge legenda a.fema;
-        by IncidentType;
-run;
-
-proc corr data=punto15;
-        var livello;
-        with            FederalShareObligated ;
+    merge legenda a.fema;
+    by IncidentType;
 run;

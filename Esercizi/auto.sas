@@ -32,34 +32,13 @@ run;
 /*
 punto 4
 */
-
-
-proc corr data=lib.esame;
-    var potenza peso accelerazione;
-    with mpg;
-run;
-
-
-
-/*
-punto 5
-*/
-proc reg  data=lib.esame;
-    model mpg=peso;
-    plot (mpg predicted.)*peso /overlay;
-run;
-
-
-/*
-punto 6
-*/
 proc freq  data=lib.esame;
     tables anno*origine;
 run;
 
 
 /*
-punto 8
+punto 5
 */
 /* prima determino la dimensione dell'array */
 proc means data=lib.esame n nway;

@@ -76,89 +76,80 @@ proc means data=elezioni2 sum nway;
         output out=punto4t sum=totale_voti;
 run;
 
-/* punto 6 */
-proc reg data=elezioni;
-        model voti4=voti6;
-        plot (p. voti3)*voti6 /overlay;
-proc reg data=elezioni;
-        model voti4=voti6;
-        plot (p. voti4)*voti6 /overlay;
-run;
-
-/* punto 7 */
+/* punto 5 */
 data elezioni;
-        set elezioni;
-        non_validi=voti1+voti2;
+    set elezioni;
+    non_validi=voti1+voti2;
 run;
 proc means data=elezioni noprint nway;
-        var non_validi;
-        id county;
-        output out=punto7a maxid=dove;
+    var non_validi;
+    id county;
+    output out=punto5a maxid=dove;
 run;
-proc print data=punto7a;run;
+proc print data=punto5a;run;
 
 proc means data=elezioni2 noprint nway;
-        var numero_voti;
-        class county;
-        output out=punto7b sum=voti_totali;
+    var numero_voti;
+    class county;
+    output out=punto5b sum=voti_totali;
 run;
-proc print data=punto7b;run;
+proc print data=punto5b;run;
 
 proc sort data=elezioni; by county; run;
-proc sort data=punto7b; by county; run;
+proc sort data=punto5b; by county; run;
 
-data punto7c;
-        merge punto7b elezioni;
-        by county;
-        percentuale_non_validi=non_validi/voti_totali;
+data punto5c;
+    merge punto5b elezioni;
+    by county;
+    percentuale_non_validi=non_validi/voti_totali;
 run;
-proc print data=punto7c;run;
+proc print data=punto5c;run;
 
-proc means data=punto7c noprint nway;
-        var percentuale_non_validi;
-        id county;
-        output out=punto7d maxid=dove;
+proc means data=punto5c noprint nway;
+    var percentuale_non_validi;
+    id county;
+    output out=punto5d maxid=dove;
 run;
-proc print data=punto7d;run;
+proc print data=punto5d;run;
 
-/* punto 8 con merge */
+/* punto 6 con merge */
 proc means data=elezioni2 sum nway;
-        var numero_voti;
-        class county;
-        where codice > 2;
-        output out=validi sum=voti_validi;
+    var numero_voti;
+    class county;
+    where codice > 2;
+    output out=validi sum=voti_validi;
 run;
 
 proc sort data=elezioni;
-        by county;
+    by county;
 run;
 
 proc sort data=validi;
-        by county;
+    by county;
 run;
 
-data punto8merge;
-        merge elezioni validi;
-        by county;
-        drop _type_ _freq_;
+data punto6merge;
+    merge elezioni validi;
+    by county;
+    drop _type_ _freq_;
 run;
 
-proc means data=punto8merge n;
-        var columns;
-        where voti6/voti_validi >= 2/100;
+proc means data=punto6merge n;
+    var columns;
+    where voti6/voti_validi >= 2/100;
 run;
 
-/* punto 8 con ods */
+/* punto 6 con ods */
 ods trace on;
 proc freq data=elezioni2;
-        tables codice*county;
-        weight numero_voti;
-        where codice>2;
-        ods output Freq.Table1.CrossTabFreqs=punto8ods;
+    tables codice*county;
+    weight numero_voti;
+    where codice>2;
+    ods output Freq.Table1.CrossTabFreqs=punto6ods;
 run;
 ods trace off;
 
-proc means data=punto8ods n;
-        where codice=6 and PercentCol >= 2;
-        var codice;
+proc means data=punto6ods n;
+    where codice=6 and PercentCol >= 2;
+    var codice;
 run;

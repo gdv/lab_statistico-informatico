@@ -43,50 +43,34 @@ run;
 /*
 punto 6
 */
-
-proc corr data=esame;
-	with minimo massimo medio;
-	var altitudine;
+proc sort data=esame;
+    by numsatellite;
+data ristru;
+    set esame;
+    by numsatellite;
+    array alt[4];
+    array azi[4];
+/*	retain alt1-alt4 azi1-azi4; */
+    retain alt azi;
+    if first.numsatellite then do;
+        do i=1 to 4;
+            alt[i]=.;
+            azi[i]=.;
+            end;
+        i=0;
+        end;
+    i+1;
+    alt[i]=altitudine;
+    azi[i]=azimuth;
+    if last.numsatellite then do;
+        keep numsatellite alt1-alt4 azi1-azi4;
+        output;
+        end;
 run;
+
+
 /*
 punto 7
-Correlazione massima con medio
-*/
-proc reg data=esame;
-	model medio  =altitudine;
-	plot (PREDICTED. medio  )*ALTITUDINE /overlay;
-run;
-/*
-punto 8
-*/
-proc sort data=esame;
-	by numsatellite;
-data ristru;
-	set esame;
-	by numsatellite;
-	array alt[4];
-	array azi[4];
-/*	retain alt1-alt4 azi1-azi4; */
-	retain alt azi;
-	if first.numsatellite then do;
-		do i=1 to 4;
-			alt[i]=.;
-			azi[i]=.;
-		end;
-		i=0;
-	end;
-	i+1;
-	alt[i]=altitudine;
-	azi[i]=azimuth;
-	if last.numsatellite then do;
-		keep numsatellite alt1-alt4 azi1-azi4;
-		output;
-	end;
-run;
-
-
-/*
-punto 9
 */
 data punto9;
     merge esame punto2;
