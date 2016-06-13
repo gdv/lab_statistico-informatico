@@ -1,3 +1,4 @@
+/* punti 1 e 2 */
 data meteo;
 	infile 'Z:\FIleSAS\dati81.csv' dlm=',' dsd;
 	input provincia$ temperatura giorno;
@@ -5,14 +6,10 @@ data meteo;
 run;
 proc print;run;
 
+/* punto 3 */
+
 proc sort data=meteo;
 	by provincia;
-run;
-
-data punto5;
-	set meteo;
-	by provincia;
-	if last.provincia then output;
 run;
 
 proc means data=meteo n nway noprint;
@@ -40,7 +37,7 @@ data nuovo;
 
 	temp[giorno]=fahr;
 
-  	if last.provincia then output;
+    if last.provincia then output;
     drop temperatura giorno fahr i;
 run;
 proc print data=ultimo;run;
@@ -54,7 +51,17 @@ data ultimo;
 		if temp[i] ne . then ultima=temp[i];
 	end;
 
-	/* qui */
 	drop temp1-temp5;
 	output;
+run;
+
+/* punto 5 */
+proc sort data=meteo;
+	by provincia;
+run;
+
+data punto5;
+	set meteo;
+	by provincia;
+	if last.provincia then output;
 run;
