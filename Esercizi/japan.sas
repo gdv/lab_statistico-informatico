@@ -89,25 +89,6 @@ data japanRistr;
 run;
 
 /* ES. 8 */
-proc corr data=japanRistr;
-	var station1-station10;
-	with station11-station20;
-run;
-
-/* ES. 9 */
-proc corr data=japanRistr best=1;
-	var station1-station10;
-	with station11-station20;
-run; /* station16 =  a*station2 + b */
-
-proc reg data=japanRistr;
-	model station16=station2;
-	plot (predicted. station16) * station2 /overlay;
-run;
-
-
-
-/* ES. 10 */
 proc means data=lib.japan mean nway;
 	var sa;
 	class station_cod;
@@ -116,7 +97,7 @@ proc means data=lib.japan mean nway;
 run;
 
 
-/* ES. 11 */
+/* ES.  9 */
 proc sort data=japanEs8;
 	by station_cod;
 run;
@@ -142,7 +123,7 @@ data lib.japanEs9;
 run;
 
 
-/* ES. 12 */
+/* ES. 10 */
 
 data lib.stations;
 	infile 'z:\FileSAS\StationLocations.csv' dsd dlm=';'  firstobs=2;
@@ -152,21 +133,21 @@ run;
 proc print data=lib.stations; run;
 
 
-/* ES. 13 */
+/* ES. 11 */
 data lib.stations;
 	set lib.stations;
 	distanza_Q = 80**2 * (Latitude - 37.422972)**2 + 111**2 * (Longitude - 141.032917)**2;
 run;
 
 
-/* ES. 14 */
+/* ES. 12 */
 proc means data=lib.stations n nway;
 	class Site_ID;
 	var Station_ID;
 run;
 
 
-/* ES. 15 */
+/* ES. 13 */
 proc sort data=lib.japan;
 	by station_cod;
 run;
@@ -180,23 +161,3 @@ data lib.japanStations;
 	merge lib.japan lib.stations;
 	by station_cod;
 run;
-
-
-/* ES. 16 */
-proc reg data=lib.japanStations;
-	model sa=distanza_Q;
-	plot (predicted. sa) * distanza_Q /overlay;
-	where date >= '11mar2011'd;
-run;
-
-
-/* ES. 17 */
-%macro regrLin(data=, distanza=);
-	proc reg data=lib.japanStations;
-		model sa=distanza_Q;
-		plot (predicted. sa) * distanza_Q /overlay;
-		where date >= &data and distanza_Q <= &distanza;
-	run;
-%mend;
-
-%regrLin(data='20mar2011'd, distanza=10000);
