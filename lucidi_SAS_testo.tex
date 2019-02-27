@@ -63,24 +63,13 @@
 \begin{frame}\frametitle{Finestre}
   \begin{itemize}
   \item
-    Editor (F5)
+    Editor)
   \item
-    Log (F6)
+    Log
   \item
-    Output (F7)
+    Output
   \item
-    Icona Esegui (F8)
-  \end{itemize}
-\end{frame}
-
-\begin{frame}\frametitle{Altre finestre}
-  \begin{itemize}
-  \item
-    Explorer
-  \item
-    Viewtable
-  \item
-    Risultati
+    Icona Esegui
   \end{itemize}
 \end{frame}
 
@@ -116,8 +105,6 @@
     Da file di dati grezzi (.txt .csv .dat)
   \item
     Da wizard di importazione
-  \item
-    Da viewtable
   \end{itemize}
 \end{frame}
 
@@ -169,10 +156,6 @@
   Dati separati da spazi
 \end{frame}
 
-\begin{frame}[fragile]\frametitle{Data Step: da dati grezzi 2}
-  \VerbatimInput{code/p4.sas}
-  Se la riga contiene $>256$ caratteri.
-\end{frame}
 
 \begin{frame}[fragile]\frametitle{Data Step - lettura da file }
   \VerbatimInput{code/p5.sas}
@@ -307,8 +290,6 @@
 
   \begin{itemize}
   \item
-    \verb!+1! salta un carattere
-  \item
     le parentesi raggruppano variabili
   \item
     \verb!COMMA7.! legge numeri con virgole come separatore migliaia
@@ -316,18 +297,6 @@
     \verb!DOLLAR7.2! come \verb!COMMA!, ma con un dollaro all'inizio
   \item
     \verb!@30! va a colonna 30
-  \end{itemize}
-\end{frame}
-
-
-\begin{frame}[containsverbatim]\frametitle{Formati}
-  \begin{itemize}
-  \item
-    \verb!@'code:'! vai alla parte di dato grezzo che {\`e} uguale a \verb!code:!
-  \item
-    \verb!/! vai alla riga successiva dei dati
-  \item
-    \verb!@@! per avere pi{\`u} di una osservazione in una riga di dati
   \end{itemize}
 \end{frame}
 
@@ -394,24 +363,6 @@
 \begin{frame}[containsverbatim]\frametitle{Riepilogo data set}
   \VerbatimInput{code/p19.sas}
 \end{frame}
-
-\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
-  \VerbatimInput{code/p35.sas}
-  \begin{itemize}
-  \item
-    Adesso \texttt{formato.} {\`e} utilizzabile in una istruzione  \texttt{format}.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
-  \VerbatimInput{code/p36.sas}
-\end{frame}
-
-
-\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
-  \VerbatimInput{code/p37.sas}
-\end{frame}
-
 
 
 \begin{frame}[fragile]\frametitle{Data Step - copia }
@@ -485,23 +436,6 @@
     E se ne soddisfa pi{\`u} di una?
   \end{itemize}
 \end{frame}
-
-
-
-\begin{frame}\frametitle{Esercizio: BMI}
-  $$\text{BMI} = \frac{\text{peso}}{\text{altezza}^2}$$
-  \begin{itemize}
-  \item
-    $BMI < 18.5 \Rightarrow$ sottopeso
-  \item
-    $18.5 \le BMI < 25 \Rightarrow$ OK
-  \item
-    $25 \le BMI < 30 \Rightarrow$ sovrappeso
-  \item
-    $BMI \ge 30 \Rightarrow$ obesit{\`a}
-  \item
-    Modificare il data set attribuendo ad ogni persona la sua classificazione
-  \end{itemize}\end{frame}
 
 
 
@@ -708,6 +642,27 @@ Pavia     24  4
 Pavia     21  5                   V
 \end{verbatim}
 \end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
+  \VerbatimInput{code/p35.sas}
+  \begin{itemize}
+  \item
+    Adesso \texttt{formato.} {\`e} utilizzabile in una istruzione  \texttt{format}.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
+  \VerbatimInput{code/p36.sas}
+\end{frame}
+
+
+\begin{frame}[containsverbatim]\frametitle{Nuovi formati}
+  \VerbatimInput{code/p37.sas}
+\end{frame}
+
+
 
 
 \begin{frame}[containsverbatim]\frametitle{Calcolare statistiche}
